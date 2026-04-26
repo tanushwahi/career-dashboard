@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tanush — Career OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #13121a;
+  --s1:        #1c1b25;
+  --s2:        #232230;
+  --s3:        #2c2b3c;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.12);
+  --text:      #e2e0ec;
+  --muted:     #7a788f;
+  --muted2:    #9997b0;
+  --accent:    #a78bfa;
+  --accent2:   #6ee7b7;
+  --amber:     #fbbf24;
+  --red:       #f87171;
+  --blue:      #60a5fa;
+  --r:         12px;
+  --r-sm:      8px;
+  --font:      'Geist', system-ui, sans-serif;
+  --mono:      'Geist Mono', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.55;min-height:100vh}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--s3);border-radius:10px}
+
+.shell{display:flex;min-height:100vh}
+.sidebar{width:230px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--border);padding:24px 0 20px;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+.main{flex:1;padding:36px 44px;max-width:1060px}
+
+.logo{padding:0 22px 22px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.logo-name{font-size:15px;font-weight:500;color:var(--text);letter-spacing:-0.01em}
+.logo-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:7px;vertical-align:middle;position:relative;top:-1px}
+.logo-sub{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:0.05em}
+
+.nav-group{padding:0 12px;margin-bottom:2px}
+.nav-label{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding:10px 10px 5px;display:block}
+.nav-btn{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;color:var(--muted2);font-family:var(--font);font-size:13px;padding:8px 10px;border-radius:var(--r-sm);cursor:pointer;text-align:left;transition:background 0.15s,color 0.15s}
+.nav-btn:hover{background:var(--s2);color:var(--text)}
+.nav-btn.active{background:rgba(167,139,250,0.12);color:var(--accent)}
+.nav-icon{font-size:13px;width:16px;text-align:center;flex-shrink:0;opacity:0.7}
+.nav-pill{margin-left:auto;background:var(--s3);color:var(--muted);font-family:var(--mono);font-size:10px;padding:1px 7px;border-radius:20px;min-width:22px;text-align:center}
+.nav-btn.active .nav-pill{background:rgba(167,139,250,0.2);color:var(--accent)}
+
+.sidebar-footer{margin-top:auto;padding:16px 22px 0;border-top:1px solid var(--border)}
+.footer-btn{display:block;width:100%;background:none;border:1px solid var(--border2);color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;padding:7px 12px;border-radius:var(--r-sm);cursor:pointer;text-align:left;margin-bottom:7px;transition:color 0.15s,border-color 0.15s}
+.footer-btn:hover{color:var(--text);border-color:var(--muted2)}
+
+.page{display:none}.page.active{display:block}
+
+.ph{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.ph-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.ph-title{font-size:24px;font-weight:300;letter-spacing:-0.02em;color:var(--text)}
+.ph-right{display:flex;gap:8px;align-items:center}
+.add-btn{background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;padding:6px 14px;border-radius:var(--r-sm);cursor:pointer;transition:background 0.15s}
+.add-btn:hover{background:rgba(167,139,250,0.18)}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px}
+.stat-lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.stat-val{font-size:28px;font-weight:300;color:var(--text);letter-spacing:-0.02em;line-height:1}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:5px}
+.v-purple{color:var(--accent)}.v-green{color:var(--accent2)}.v-amber{color:var(--amber)}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px}
+.card-mb{margin-bottom:14px}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-family:var(--mono);font-size:10px;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted)}
+.card-action{background:none;border:1px solid var(--border2);color:var(--muted);font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:6px;cursor:pointer;transition:color 0.15s,border-color 0.15s}
+.card-action:hover{color:var(--accent);border-color:var(--accent)}
+
+.row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.row:last-child{border-bottom:none}
+.row-body{flex:1;min-width:0}
+.row-name{font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.row-note{font-size:11px;color:var(--muted);margin-top:2px;font-style:italic}
+
+.badge{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;border:1px solid transparent}
+.b-green{background:rgba(110,231,183,0.1);color:#6ee7b7;border-color:rgba(110,231,183,0.2)}
+.b-amber{background:rgba(251,191,36,0.1);color:#fbbf24;border-color:rgba(251,191,36,0.2)}
+.b-red{background:rgba(248,113,113,0.1);color:#f87171;border-color:rgba(248,113,113,0.2)}
+.b-purple{background:rgba(167,139,250,0.1);color:#a78bfa;border-color:rgba(167,139,250,0.2)}
+.b-blue{background:rgba(96,165,250,0.1);color:#60a5fa;border-color:rgba(96,165,250,0.2)}
+.b-gray{background:rgba(255,255,255,0.05);color:var(--muted2);border-color:var(--border2)}
+
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.d-red{background:var(--red)}.d-amber{background:var(--amber)}.d-blue{background:var(--blue)}.d-green{background:var(--accent2)}
+
+.chk{width:15px;height:15px;flex-shrink:0;margin-top:2px;accent-color:var(--accent);cursor:pointer}
+
+[contenteditable]{outline:none;border-radius:4px;transition:background 0.15s}
+[contenteditable]:hover{background:rgba(255,255,255,0.04)}
+[contenteditable]:focus{background:rgba(255,255,255,0.07);box-shadow:0 0 0 1px var(--border2)}
+.struck{text-decoration:line-through;color:var(--muted)}
+
+.sel{background:transparent;border:1px solid var(--border);color:var(--muted2);font-family:var(--mono);font-size:10px;padding:3px 7px;border-radius:6px;cursor:pointer;transition:border-color 0.15s}
+.sel:hover{border-color:var(--border2)}.sel option{background:#1c1b25}
+
+.del{background:none;border:none;color:transparent;cursor:pointer;font-size:16px;padding:0 3px;line-height:1;flex-shrink:0;transition:color 0.15s}
+.row:hover .del{color:var(--muted)}.del:hover{color:var(--red) !important}
+
+.note-ta{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;width:100%;font-family:var(--mono);font-size:12px;color:var(--text);line-height:1.7;min-height:110px;resize:vertical}
+.note-ta:focus{outline:none;border-color:var(--border2)}
+
+.prog-row{margin-bottom:13px}.prog-row:last-child{margin-bottom:0}
+.prog-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
+.prog-track{height:3px;background:var(--s3);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;transition:width 0.5s}
+.pf-purple{background:var(--accent)}.pf-amber{background:var(--amber)}.pf-blue{background:var(--blue)}
+
+.wk-grid{display:flex;gap:5px;align-items:flex-end;height:64px;margin:12px 0 5px}
+.wk-bar{flex:1;background:var(--s3);border-radius:3px 3px 0 0;cursor:pointer;min-height:4px;transition:background 0.2s}
+.wk-bar:hover{background:rgba(167,139,250,0.3)}
+.wk-bar.on{background:rgba(167,139,250,0.5)}.wk-bar.on:hover{background:rgba(167,139,250,0.7)}
+.wk-lbls{display:flex;gap:5px}
+.wk-lbl{flex:1;text-align:center;font-family:var(--mono);font-size:9px;color:var(--muted)}
+
+.paste-area{background:var(--s2);border:1px dashed var(--border2);border-radius:var(--r);padding:14px;width:100%;font-family:var(--mono);font-size:11px;color:var(--text);min-height:80px;resize:vertical;line-height:1.6;margin-bottom:10px}
+.paste-area:focus{outline:none;border-color:var(--accent);border-style:solid}
+.parse-btn{background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;padding:8px 18px;border-radius:var(--r-sm);cursor:pointer;transition:background 0.15s}
+.parse-btn:hover{background:rgba(167,139,250,0.2)}
+.parse-hint{font-size:11px;color:var(--muted);margin-left:12px}
+
+.empty{font-size:12px;color:var(--muted);padding:10px 0;font-style:italic}
+
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--s1);border:1px solid var(--border2);border-radius:16px;padding:28px 30px;width:460px;max-width:92vw}
+.modal-title{font-size:16px;font-weight:400;color:var(--text);margin-bottom:18px;letter-spacing:-0.01em}
+.modal label{font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);display:block;margin:12px 0 5px}
+.modal label:first-of-type{margin-top:0}
+.modal input,.modal select,.modal textarea{width:100%;background:var(--s2);border:1px solid var(--border2);color:var(--text);font-family:var(--font);font-size:13px;padding:9px 12px;border-radius:var(--r-sm)}
+.modal input:focus,.modal select:focus,.modal textarea:focus{outline:none;border-color:var(--accent)}
+.modal select option{background:var(--s2)}
+.modal-actions{display:flex;gap:9px;margin-top:20px;justify-content:flex-end}
+.btn-save{background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.35);color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;padding:9px 20px;border-radius:var(--r-sm);cursor:pointer;transition:background 0.15s}
+.btn-save:hover{background:rgba(167,139,250,0.25)}
+.btn-cancel{background:none;border:1px solid var(--border2);color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;padding:9px 20px;border-radius:var(--r-sm);cursor:pointer;transition:color 0.15s}
+.btn-cancel:hover{color:var(--text)}
+
+.toast{position:fixed;bottom:22px;right:22px;background:var(--s2);border:1px solid var(--accent);color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:0.06em;padding:10px 16px;border-radius:var(--r-sm);opacity:0;transition:opacity 0.25s;pointer-events:none;z-index:300}
+.toast.on{opacity:1}
+
+@media(max-width:820px){
+  .shell{flex-direction:column}.sidebar{width:100%;height:auto;position:static;padding:14px 0}
+  .main{padding:20px 18px}.stats{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}
+  .nav-group{padding:0 8px}.nav-label{display:none}
+  .sidebar-footer{display:flex;gap:6px;border-top:none;padding:8px 12px 0}
+  .footer-btn{margin-bottom:0}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<nav class="sidebar">
+  <div class="logo">
+    <div class="logo-name"><span class="logo-dot"></span>Tanush Wahi</div>
+    <div class="logo-sub">Career OS · 2026</div>
+  </div>
+  <div class="nav-group">
+    <span class="nav-label">Overview</span>
+    <button class="nav-btn active" onclick="nav(this,'home')"><span class="nav-icon">⬡</span>Home</button>
+  </div>
+  <div class="nav-group">
+    <span class="nav-label">Applications</span>
+    <button class="nav-btn" onclick="nav(this,'nuworks')"><span class="nav-icon">⊞</span>NUworks <span class="nav-pill" id="pill-nw">—</span></button>
+    <button class="nav-btn" onclick="nav(this,'outreach')"><span class="nav-icon">◎</span>Cold outreach <span class="nav-pill" id="pill-out">—</span></button>
+  </div>
+  <div class="nav-group">
+    <span class="nav-label">Track</span>
+    <button class="nav-btn" onclick="nav(this,'todos')"><span class="nav-icon">◻</span>To-dos <span class="nav-pill" id="pill-td">—</span></button>
+    <button class="nav-btn" onclick="nav(this,'network')"><span class="nav-icon">◉</span>Networking</button>
+  </div>
+  <div class="nav-group">
+    <span class="nav-label">Plan</span>
+    <button class="nav-btn" onclick="nav(this,'targets')"><span class="nav-icon">◈</span>Round 2 targets</button>
+    <button class="nav-btn" onclick="nav(this,'notes')"><span class="nav-icon">▤</span>Notes</button>
+  </div>
+  <div class="sidebar-footer">
+    <button class="footer-btn" onclick="exportData()">↑ Export JSON</button>
+    <button class="footer-btn" onclick="document.getElementById('imp').click()">↓ Import JSON</button>
+    <input type="file" id="imp" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="ph">
+    <div><div class="ph-eyebrow">Career Dashboard</div><div class="ph-title">Overview</div></div>
+    <span style="font-family:var(--mono);font-size:11px;color:var(--muted)" id="home-date"></span>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-lbl">NUworks — interviewing</div><div class="stat-val v-purple" id="s-nw">—</div><div class="stat-sub">active interviews</div></div>
+    <div class="stat"><div class="stat-lbl">Cold outreach</div><div class="stat-val v-green" id="s-out">—</div><div class="stat-sub">tracked</div></div>
+    <div class="stat"><div class="stat-lbl">Open to-dos</div><div class="stat-val" id="s-td">—</div><div class="stat-sub" id="s-td-sub">remaining</div></div>
+    <div class="stat"><div class="stat-lbl">Days to Jun 19</div><div class="stat-val v-amber" id="s-dl">—</div><div class="stat-sub">NEU co-op deadline</div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="card-hd"><div class="card-title">Urgent to-dos</div></div><div id="h-todos"></div></div>
+    <div class="card"><div class="card-hd"><div class="card-title">NUworks — interviewing now</div></div><div id="h-nw"></div></div>
+  </div>
+  <div class="card card-mb">
+    <div class="card-hd"><div class="card-title">Progress</div></div>
+    <div class="prog-row"><div class="prog-meta"><span>NUworks interviews</span><span id="pr-nw-t">—</span></div><div class="prog-track"><div class="prog-fill pf-purple" id="pr-nw" style="width:0%"></div></div></div>
+    <div class="prog-row"><div class="prog-meta"><span>To-dos cleared</span><span id="pr-td-t">—</span></div><div class="prog-track"><div class="prog-fill pf-amber" id="pr-td" style="width:0%"></div></div></div>
+    <div class="prog-row"><div class="prog-meta"><span>Networking chats (May goal: 20)</span><span id="pr-net-t">—</span></div><div class="prog-track"><div class="prog-fill pf-blue" id="pr-net" style="width:0%"></div></div></div>
+  </div>
+</div>
+
+<!-- NUWORKS -->
+<div class="page" id="page-nuworks">
+  <div class="ph"><div><div class="ph-eyebrow">Applications</div><div class="ph-title">NUworks</div></div></div>
+  <div class="card card-mb">
+    <div class="card-hd"><div class="card-title">Paste NUworks export — messy copy-paste is fine</div></div>
+    <textarea class="paste-area" id="nw-paste" placeholder="Copy everything from your NUworks application history and paste it here. Click Parse — it'll filter out Filled/Expired automatically and group by status."></textarea>
+    <div style="display:flex;align-items:center">
+      <button class="parse-btn" onclick="parseNUworks()">Parse &amp; update</button>
+      <span class="parse-hint" id="parse-hint"></span>
+    </div>
+  </div>
+  <div class="card card-mb">
+    <div class="card-hd"><div class="card-title">Interviewing <span id="nw-int-ct" style="color:var(--accent);margin-left:6px"></span></div></div>
+    <div id="nw-int"></div>
+  </div>
+  <div class="card card-mb">
+    <div class="card-hd"><div class="card-title">Pending / awaiting placement <span id="nw-pend-ct" style="color:var(--amber);margin-left:6px"></span></div></div>
+    <div id="nw-pend"></div>
+  </div>
+  <div class="card card-mb">
+    <div class="card-hd"><div class="card-title">Available / still open <span id="nw-avail-ct" style="color:var(--muted2);margin-left:6px"></span></div></div>
+    <div id="nw-avail"></div>
+  </div>
+</div>
+
+<!-- COLD OUTREACH -->
+<div class="page" id="page-outreach">
+  <div class="ph">
+    <div><div class="ph-eyebrow">Applications</div><div class="ph-title">Cold outreach</div></div>
+    <div class="ph-right"><button class="add-btn" onclick="openModal('outreach')">+ Add</button></div>
+  </div>
+  <div class="card card-mb" id="out-list"></div>
+</div>
+
+<!-- TODOS -->
+<div class="page" id="page-todos">
+  <div class="ph">
+    <div><div class="ph-eyebrow">Track</div><div class="ph-title">To-dos</div></div>
+    <div class="ph-right"><button class="add-btn" onclick="openModal('todo')">+ Add</button></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="card-hd"><div class="card-title">Urgent</div></div><div id="td-urgent"></div></div>
+    <div class="card"><div class="card-hd"><div class="card-title">This week</div></div><div id="td-week"></div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="card-hd"><div class="card-title">Plan ahead</div></div><div id="td-plan"></div></div>
+    <div class="card"><div class="card-hd"><div class="card-title">Done</div></div><div id="td-done"></div></div>
+  </div>
+</div>
+
+<!-- NETWORKING -->
+<div class="page" id="page-network">
+  <div class="ph">
+    <div><div class="ph-eyebrow">Track</div><div class="ph-title">Networking</div></div>
+    <div class="ph-right"><button class="add-btn" onclick="openModal('contact')">+ Add contact</button></div>
+  </div>
+  <div class="card card-mb">
+    <div class="card-hd"><div class="card-title">Coffee chats — click a bar to log one <span id="chat-total" style="color:var(--accent);margin-left:8px"></span></div></div>
+    <div class="wk-grid" id="wk-grid"></div>
+    <div class="wk-lbls" id="wk-lbls"></div>
+  </div>
+  <div class="card card-mb" id="contacts-list"></div>
+</div>
+
+<!-- ROUND 2 TARGETS -->
+<div class="page" id="page-targets">
+  <div class="ph">
+    <div><div class="ph-eyebrow">Plan</div><div class="ph-title">Round 2 targets</div></div>
+    <div class="ph-right"><button class="add-btn" onclick="openModal('target')">+ Add firm</button></div>
+  </div>
+  <div class="card card-mb" id="targets-list"></div>
+</div>
+
+<!-- NOTES -->
+<div class="page" id="page-notes">
+  <div class="ph">
+    <div><div class="ph-eyebrow">Free text</div><div class="ph-title">Notes</div></div>
+    <div class="ph-right"><button class="add-btn" onclick="addNote()">+ New note</button></div>
+  </div>
+  <div id="notes-list"></div>
+</div>
+
+</main>
+</div>
+
+<div class="modal-bg" id="modal-bg" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Add</div>
+    <div id="modal-fields"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveModal()">Save</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const SK={nw:'tw2_nw',out:'tw2_out',todos:'tw2_todos',contacts:'tw2_contacts',targets:'tw2_targets',notes:'tw2_notes',chats:'tw2_chats'};
+const DEF={
+  nw:[],
+  out:[
+    {id:1,firm:'Audax Group',role:'Investor Ops · Private Debt',status:'confirmation',notes:'Applied via NUworks + direct follow-up'},
+    {id:2,firm:'Ropes & Gray LLP',role:'BD · Private Capital',status:'confirmation',notes:'Applied via NUworks + direct follow-up'},
+    {id:3,firm:'Raptor Group',role:'Private Investment · Fund Specific',status:'interviewing',notes:'Interviewing per NUworks'},
+    {id:4,firm:'MWP Foundation',role:'Finance & Strategy Lead',status:'self-dev',notes:'Self-developed · NEU deadline Jun 19'}
+  ],
+  todos:[
+    {id:1,text:'Pin co-op decision deadline with NEU advisor',sub:'',priority:'urgent',done:false},
+    {id:2,text:'Wrap CeCarre deliverable — add concrete metric',sub:'',priority:'urgent',done:false},
+    {id:3,text:'Confirm status with Audax and R&G',sub:'',priority:'week',done:false},
+    {id:4,text:'Line up first coffee chat for May networking push',sub:'',priority:'plan',done:false},
+    {id:5,text:'Research financial modeling course options',sub:'May–June prep',priority:'plan',done:false}
+  ],
+  contacts:[
+    {id:1,name:'NEU alum',company:'Fidelity',role:'AM Operations',status:'queue',notes:''},
+    {id:2,name:'NEU alum',company:'Wellington Management',role:'Portfolio Analytics',status:'queue',notes:''},
+    {id:3,name:'NEU alum',company:'State Street / SSGA',role:'',status:'queue',notes:''}
+  ],
+  targets:[
+    {id:1,firm:'Fidelity Investments',type:'AM',tier:'A',notes:'Boston HQ · massive NEU alumni network'},
+    {id:2,firm:'Wellington Management',type:'AM',tier:'A',notes:'Top-tier AM · Boston-based'},
+    {id:3,firm:'GMO',type:'AM',tier:'A',notes:'Value/quant-oriented · Boston'},
+    {id:4,firm:'Acadian Asset Management',type:'AM · Quant',tier:'A',notes:'Systematic / factor investing'},
+    {id:5,firm:'State Street Global Advisors',type:'AM',tier:'B',notes:'Large platform · Boston'}
+  ],
+  notes:[{id:1,title:'Co-op strategy',body:'Round 1 goal: land a role that builds the AM story.\n\nAudax and R&G both confirmation-pending — follow up this week.\nRaptor is interviewing — keep tracking.\n\nIf none confirm, MWP self-dev is the fallback. Get NEU advisor meeting locked in.\n\nMay–June free period: 3–5 coffee chats/week with Boston AM alumni.\nFocus: Fidelity, Wellington, GMO, Acadian.'}],
+  chats:{}
+};
+
+function ld(k){try{const v=localStorage.getItem(SK[k]);return v?JSON.parse(v):null}catch(e){return null}}
+function sv(k,v){try{localStorage.setItem(SK[k],JSON.stringify(v))}catch(e){}}
+function get(k){return ld(k)??JSON.parse(JSON.stringify(DEF[k]||(k==='chats'?{}:[])))}
+function set(k,v){sv(k,v)}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+let curModal=null;
+
+function nav(btn,id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  renderAll();
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),2200);
+}
+
+/* NUWORKS PARSER */
+function parseNUworks(){
+  const raw=document.getElementById('nw-paste').value.trim();
+  if(!raw){toast('Paste something first');return;}
+  const lines=raw.split('\n').map(l=>l.trim()).filter(Boolean);
+  const apps=[];
+  const DEAD=['Filled','Expired','Status Not Available','Not Selected For Interview'];
+  const INT=['Interviewing'];
+  const PEND=['Pending or Draft Placements','Awaiting Placement Submission(s)'];
+
+  for(let i=0;i<lines.length;i++){
+    if(!lines[i].startsWith('Job Number:'))continue;
+    const jobNum=lines[i].replace('Job Number:','').trim();
+    const title=i>0?lines[i-1]:'';
+    let company='',jobStatus='',dateApplied='';
+    let j=i+1;
+    const nextJob=lines.slice(j).findIndex(l=>l.startsWith('Job Number:'));
+    const end=nextJob>=0?j+nextJob:lines.length;
+    for(let k=j;k<end;k++){
+      const l=lines[k];
+      if(l.match(/^(Filled|Available|Expired|Interviewing|Pending|Awaiting|Status Not)/)){if(!jobStatus)jobStatus=l;}
+      if(l.match(/^\d{2}\/\d{2}\/\d{4}$/)&&!dateApplied)dateApplied=l;
+      if(!company&&l.length>2&&
+         !l.startsWith('Job Number:')&&
+         !l.match(/^(Co-op|Internship|Full Time|Applied|Not Selected|Interview|Report|Yes|No|Available|Filled|Expired|Interviewing|Pending|Awaiting|Status)/)&&
+         !l.match(/^\d/)){
+        company=l;
+      }
+    }
+    if(DEAD.some(s=>jobStatus.startsWith(s)))continue;
+    if(!title||!company)continue;
+    let bucket='available';
+    if(INT.some(s=>jobStatus.startsWith(s)))bucket='interviewing';
+    else if(PEND.some(s=>jobStatus.startsWith(s)))bucket='pending';
+    apps.push({id:jobNum,title,company,jobStatus,dateApplied,bucket});
+  }
+
+  set('nw',apps);
+  document.getElementById('nw-paste').value='';
+  document.getElementById('parse-hint').textContent=apps.length+' active apps parsed';
+  renderAll();
+  toast('Updated — '+apps.length+' active apps');
+}
+
+/* RENDER HOME */
+function renderHome(){
+  document.getElementById('home-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+  const nw=get('nw'),out=get('out'),todos=get('todos'),chats=get('chats');
+  const nwInt=nw.filter(a=>a.bucket==='interviewing');
+  document.getElementById('s-nw').textContent=nwInt.length||'0';
+  document.getElementById('s-out').textContent=out.length;
+  const open=todos.filter(t=>!t.done).length;
+  document.getElementById('s-td').textContent=open;
+  document.getElementById('s-td-sub').textContent=open+' remaining';
+  const diff=Math.max(0,Math.round((new Date('2026-06-19')-new Date())/86400000));
+  document.getElementById('s-dl').textContent=diff;
+
+  const urgent=todos.filter(t=>!t.done&&t.priority==='urgent').slice(0,4);
+  document.getElementById('h-todos').innerHTML=urgent.length?
+    urgent.map(t=>`<div class="row"><div class="dot d-red"></div><div class="row-body"><div class="row-name">${esc(t.text)}</div></div></div>`).join(''):
+    '<div class="empty">No urgent items</div>';
+
+  document.getElementById('h-nw').innerHTML=nwInt.length?
+    nwInt.slice(0,5).map(a=>`<div class="row"><div class="row-body"><div class="row-name">${esc(a.title)}</div><div class="row-sub">${esc(a.company)}</div></div><span class="badge b-green">Interviewing</span></div>`).join(''):
+    '<div class="empty">No interviews yet — paste NUworks data</div>';
+
+  const chatTotal=Object.values(chats).reduce((a,b)=>a+b,0);
+  document.getElementById('pr-nw').style.width=Math.min(100,nwInt.length*10)+'%';
+  document.getElementById('pr-nw-t').textContent=nwInt.length+' interviews';
+  const done=todos.filter(t=>t.done).length;
+  document.getElementById('pr-td').style.width=(todos.length?Math.round(done/todos.length*100):0)+'%';
+  document.getElementById('pr-td-t').textContent=done+' / '+todos.length;
+  document.getElementById('pr-net').style.width=Math.min(100,Math.round(chatTotal/20*100))+'%';
+  document.getElementById('pr-net-t').textContent=chatTotal+' / 20';
+
+  document.getElementById('pill-nw').textContent=nwInt.length||'0';
+  document.getElementById('pill-out').textContent=out.length;
+  document.getElementById('pill-td').textContent=open||'✓';
+}
+
+/* RENDER NUWORKS */
+function renderNUworks(){
+  const nw=get('nw');
+  const int=nw.filter(a=>a.bucket==='interviewing');
+  const pend=nw.filter(a=>a.bucket==='pending');
+  const avail=nw.filter(a=>a.bucket==='available');
+  document.getElementById('nw-int-ct').textContent=int.length;
+  document.getElementById('nw-pend-ct').textContent=pend.length;
+  document.getElementById('nw-avail-ct').textContent=avail.length;
+  const rowHTML=(a,cls,lbl)=>`<div class="row"><div class="row-body"><div class="row-name">${esc(a.title)}</div><div class="row-sub">${esc(a.company)}${a.dateApplied?' · '+a.dateApplied:''}</div></div><span class="badge ${cls}">${lbl}</span></div>`;
+  document.getElementById('nw-int').innerHTML=int.length?int.map(a=>rowHTML(a,'b-green','Interviewing')).join(''):'<div class="empty">None yet — paste your NUworks data above</div>';
+  document.getElementById('nw-pend').innerHTML=pend.length?pend.map(a=>rowHTML(a,'b-amber','Pending')).join(''):'<div class="empty">None</div>';
+  document.getElementById('nw-avail').innerHTML=avail.length?avail.map(a=>rowHTML(a,'b-gray','Available')).join(''):'<div class="empty">None</div>';
+}
+
+/* RENDER OUTREACH */
+const OST={'confirmation':['b-green','Confirmation pending'],'interviewing':['b-purple','Interviewing'],'offer':['b-blue','Offer received'],'self-dev':['b-amber','Self-dev / backup'],'sent':['b-gray','Email sent'],'no-reply':['b-gray','No reply'],'rejected':['b-red','Rejected'],'withdrew':['b-gray','Withdrew']};
+function renderOutreach(){
+  const out=get('out');
+  document.getElementById('out-list').innerHTML=out.length?out.map(o=>{
+    const[cls,lbl]=OST[o.status]||['b-gray',o.status];
+    return`<div class="row"><div class="row-body"><div class="row-name" contenteditable="true" onblur="ef('out',${o.id},'firm',this.textContent)">${esc(o.firm)}</div><div class="row-sub" contenteditable="true" onblur="ef('out',${o.id},'role',this.textContent)">${esc(o.role)}</div>${o.notes?`<div class="row-note">${esc(o.notes)}</div>`:''}</div><select class="sel" onchange="ef('out',${o.id},'status',this.value)">${Object.entries(OST).map(([k,v])=>`<option value="${k}" ${o.status===k?'selected':''}>${v[1]}</option>`).join('')}</select><button class="del" onclick="delItem('out',${o.id})">×</button></div>`;
+  }).join(''):'<div class="empty" style="padding:12px">No cold outreach tracked yet — click + Add.</div>';
+}
+
+/* RENDER TODOS */
+function renderTodos(){
+  const todos=get('todos');
+  const buckets={urgent:[],week:[],plan:[],done:[]};
+  todos.forEach(t=>{if(t.done)buckets.done.push(t);else buckets[t.priority||'week'].push(t);});
+  ['urgent','week','plan','done'].forEach(b=>{
+    const el=document.getElementById('td-'+b);if(!el)return;
+    el.innerHTML=buckets[b].length?buckets[b].map(t=>`<div class="row"><input type="checkbox" class="chk" ${t.done?'checked':''} onchange="toggleTodo(${t.id})"><div class="row-body"><div class="row-name ${t.done?'struck':''}" contenteditable="true" onblur="ef('todos',${t.id},'text',this.textContent)">${esc(t.text)}</div>${t.sub?`<div class="row-sub">${esc(t.sub)}</div>`:''}</div><button class="del" onclick="delItem('todos',${t.id})">×</button></div>`).join(''):'<div class="empty">None here</div>';
+  });
+}
+
+/* RENDER NETWORKING */
+const CSTAT={queue:['b-gray','Queue'],reached:['b-amber','Reached out'],scheduled:['b-purple','Scheduled'],done:['b-green','Chat done']};
+function renderNetwork(){
+  const contacts=get('contacts'),chats=get('chats');
+  const now=new Date();
+  const weeks=[];
+  for(let i=7;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i*7);const key=d.toISOString().slice(0,10);weeks.push({key,count:chats[key]||0,label:d.toLocaleDateString('en-US',{month:'numeric',day:'numeric'})});}
+  const mx=Math.max(5,...weeks.map(w=>w.count));
+  document.getElementById('wk-grid').innerHTML=weeks.map(w=>`<div class="wk-bar ${w.count>0?'on':''}" style="height:${Math.max(6,Math.round(w.count/mx*100))}%" title="${w.count} chats — week of ${w.label}" onclick="logChat('${w.key}')"></div>`).join('');
+  document.getElementById('wk-lbls').innerHTML=weeks.map(w=>`<div class="wk-lbl">${w.label}</div>`).join('');
+  const total=Object.values(chats).reduce((a,b)=>a+b,0);
+  document.getElementById('chat-total').textContent=total+' total';
+  document.getElementById('contacts-list').innerHTML=contacts.length?contacts.map(c=>{
+    const[cls,lbl]=CSTAT[c.status]||['b-gray',c.status];
+    return`<div class="row"><div class="row-body"><div class="row-name" contenteditable="true" onblur="ef('contacts',${c.id},'name',this.textContent)">${esc(c.name)}</div><div class="row-sub"><span contenteditable="true" onblur="ef('contacts',${c.id},'company',this.textContent)">${esc(c.company)}</span>${c.role?' · '+esc(c.role):''}</div>${c.notes?`<div class="row-note">${esc(c.notes)}</div>`:''}</div><select class="sel" onchange="ef('contacts',${c.id},'status',this.value)">${Object.entries(CSTAT).map(([k,v])=>`<option value="${k}" ${c.status===k?'selected':''}>${v[1]}</option>`).join('')}</select><button class="del" onclick="delItem('contacts',${c.id})">×</button></div>`;
+  }).join(''):'<div class="empty" style="padding:12px">No contacts yet.</div>';
+}
+
+/* RENDER TARGETS */
+const TTIER={A:['b-purple','Tier A'],B:['b-amber','Tier B'],C:['b-gray','Tier C']};
+function renderTargets(){
+  const targets=get('targets');
+  document.getElementById('targets-list').innerHTML=targets.length?targets.map(t=>{
+    const[cls,lbl]=TTIER[t.tier]||['b-gray',t.tier];
+    return`<div class="row"><div class="row-body"><div class="row-name" contenteditable="true" onblur="ef('targets',${t.id},'firm',this.textContent)">${esc(t.firm)}</div><div class="row-sub"><span class="badge b-blue" style="font-size:10px;padding:1px 7px">${esc(t.type)}</span>${t.notes?' · '+esc(t.notes):''}</div></div><select class="sel" onchange="ef('targets',${t.id},'tier',this.value)">${Object.entries(TTIER).map(([k,v])=>`<option value="${k}" ${t.tier===k?'selected':''}>${v[1]}</option>`).join('')}</select><button class="del" onclick="delItem('targets',${t.id})">×</button></div>`;
+  }).join(''):'<div class="empty" style="padding:12px">No targets yet.</div>';
+}
+
+/* RENDER NOTES */
+function renderNotes(){
+  const notes=get('notes');
+  document.getElementById('notes-list').innerHTML=notes.map(n=>`<div class="card card-mb"><div class="card-hd"><div class="card-title" contenteditable="true" onblur="ef('notes',${n.id},'title',this.textContent)" style="color:var(--muted2);font-size:11px">${esc(n.title)}</div><button class="del" onclick="delItem('notes',${n.id})" style="color:var(--muted)">×</button></div><textarea class="note-ta" onblur="ef('notes',${n.id},'body',this.value)">${esc(n.body)}</textarea></div>`).join('');
+}
+
+function renderAll(){renderHome();renderNUworks();renderOutreach();renderTodos();renderNetwork();renderTargets();renderNotes();}
+
+/* MUTATIONS */
+function ef(k,id,field,val){
+  const data=get(k);const item=data.find(x=>x.id===id);
+  if(item){item[field]=val.trim();set(k,data);renderHome();}
+}
+function toggleTodo(id){
+  const todos=get('todos');const t=todos.find(x=>x.id===id);
+  if(t){t.done=!t.done;set('todos',todos);renderTodos();renderHome();toast(t.done?'Done ✓':'Reopened');}
+}
+function delItem(k,id){set(k,get(k).filter(x=>x.id!==id));renderAll();toast('Removed');}
+function logChat(wk){const chats=get('chats');chats[wk]=(chats[wk]||0)+1;set('chats',chats);renderNetwork();renderHome();toast('Chat logged +1');}
+function addNote(){const notes=get('notes');notes.push({id:Date.now(),title:'New note',body:''});set('notes',notes);renderNotes();}
+
+/* MODALS */
+const MCFG={
+  outreach:{title:'Add cold outreach',fields:[{k:'firm',l:'Firm / company',t:'text',ph:'e.g. Fidelity'},{k:'role',l:'Role / team',t:'text',ph:'e.g. AM Operations'},{k:'status',l:'Status',t:'sel',opts:Object.entries(OST).map(([k,v])=>({v:k,l:v[1]})),def:'sent'},{k:'notes',l:'Notes (optional)',t:'text',ph:''}],save(v){const d=get('out');d.push({id:Date.now(),firm:v.firm||'—',role:v.role||'',status:v.status||'sent',notes:v.notes||''});set('out',d);}},
+  todo:{title:'Add to-do',fields:[{k:'text',l:'Task',t:'text',ph:'What needs doing?'},{k:'sub',l:'Sub-text / due (optional)',t:'text',ph:''},{k:'priority',l:'Priority',t:'sel',opts:[{v:'urgent',l:'Urgent'},{v:'week',l:'This week'},{v:'plan',l:'Plan ahead'}],def:'week'}],save(v){const d=get('todos');d.push({id:Date.now(),text:v.text||'—',sub:v.sub||'',priority:v.priority||'week',done:false});set('todos',d);}},
+  contact:{title:'Add contact',fields:[{k:'name',l:'Name',t:'text',ph:'e.g. Alex Chen'},{k:'company',l:'Company',t:'text',ph:'e.g. Wellington'},{k:'role',l:'Role (optional)',t:'text',ph:''},{k:'status',l:'Status',t:'sel',opts:[{v:'queue',l:'Queue'},{v:'reached',l:'Reached out'},{v:'scheduled',l:'Scheduled'},{v:'done',l:'Chat done'}],def:'queue'},{k:'notes',l:'Notes (optional)',t:'text',ph:''}],save(v){const d=get('contacts');d.push({id:Date.now(),name:v.name||'—',company:v.company||'',role:v.role||'',status:v.status||'queue',notes:v.notes||''});set('contacts',d);}},
+  target:{title:'Add Round 2 target',fields:[{k:'firm',l:'Firm',t:'text',ph:'e.g. GMO'},{k:'type',l:'Type',t:'text',ph:'e.g. AM, HF, PE'},{k:'tier',l:'Tier',t:'sel',opts:[{v:'A',l:'Tier A'},{v:'B',l:'Tier B'},{v:'C',l:'Tier C'}],def:'B'},{k:'notes',l:'Notes',t:'text',ph:'e.g. Quant-focused, Boston'}],save(v){const d=get('targets');d.push({id:Date.now(),firm:v.firm||'—',type:v.type||'AM',tier:v.tier||'B',notes:v.notes||''});set('targets',d);}}
+};
+
+function openModal(type){
+  const cfg=MCFG[type];if(!cfg)return;curModal=type;
+  document.getElementById('modal-title').textContent=cfg.title;
+  document.getElementById('modal-fields').innerHTML=cfg.fields.map(f=>f.t==='sel'?`<label>${f.l}</label><select id="mf-${f.k}">${f.opts.map(o=>`<option value="${o.v}"${o.v===f.def?' selected':''}>${o.l}</option>`).join('')}</select>`:`<label>${f.l}</label><input id="mf-${f.k}" type="text" placeholder="${f.ph||''}">`).join('');
+  document.getElementById('modal-bg').classList.add('open');
+  setTimeout(()=>{const f=document.querySelector('#modal-fields input');if(f)f.focus();},60);
+}
+function closeModal(){document.getElementById('modal-bg').classList.remove('open');curModal=null;}
+function bgClose(e){if(e.target===document.getElementById('modal-bg'))closeModal();}
+function saveModal(){
+  if(!curModal)return;const cfg=MCFG[curModal];const vals={};
+  cfg.fields.forEach(f=>{const el=document.getElementById('mf-'+f.k);if(el)vals[f.k]=el.value.trim();});
+  cfg.save(vals);closeModal();renderAll();toast('Saved');
+}
+
+function exportData(){
+  const data={};Object.keys(SK).forEach(k=>{data[k]=get(k);});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.download='tanush-career-os-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();toast('Exported');
+}
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=ev=>{try{const d=JSON.parse(ev.target.result);Object.keys(SK).forEach(k=>{if(d[k]!==undefined)set(k,d[k]);});renderAll();toast('Imported');}catch(err){alert('Invalid JSON');}};
+  r.readAsText(file);e.target.value='';
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+renderAll();
+</script>
+</body>
+</html>
